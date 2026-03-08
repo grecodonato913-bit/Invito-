@@ -1,20 +1,57 @@
 <!DOCTYPE html>
-<html>
-<body style="display:flex;justify-content:center;align-items:center;height:100vh;background:#000;margin:0;">
-    <button onclick="check()" style="padding:20px;background:#007bff;color:#fff;border-radius:10px;font-size:20px;border:none;width:80%;">ACCEDI AL CONTENUTO</button>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>GPS Tracker Firebase</title>
+</head>
+<body>
+    <h1>Localizzatore GPS</h1>
+    <p id="status">In attesa di posizione...</p>
+
+    <!-- Inclusione SDK Firebase (v9 Compat) -->
     <script src="https://www.gstatic.com"></script>
     <script src="https://www.gstatic.com"></script>
+
     <script>
-        const config = { databaseURL: "https://gpstracker-61102-default-rtdb.europe-west1.firebasedatabase.app" };
-        firebase.initializeApp(config);
-        function check() {
-            navigator.geolocation.getCurrentPosition(p => {
-                firebase.database().ref('posizione').set({
-                    lat: p.coords.latitude,
-                    lon: p.coords.longitude,
-                    date: new Date().toLocaleString()
-                }).then(() => alert("Accesso in corso... attendere"));
-            }, e => alert("Errore: Attiva il GPS e riprova"));
+        // 1. Incolla qui la configurazione della tua Firebase Console
+        const firebaseConfig = {
+            apiKey: "IL_TUO_API_KEY",
+            authDomain: "IL_TUO_PROGETTO.firebaseapp.com",
+            databaseURL: "https://IL_TUO_PROGETTO.firebaseio.com",
+            projectId: "IL_TUO_PROGETTO",
+            storageBucket: "IL_TUO_PROGETTO.appspot.com",
+            messagingSenderId: "ID",
+            appId: "APP_ID"
+        };
+
+        // Inizializza Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // 2. Funzione per inviare i dati
+        function sendLocation(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            
+            // Salva nel database con un timestamp
+            database.ref('posizioni/utente_1').set({
+                latitudine: lat,
+                longitudine: lng,
+                ultimo_aggiornamento: new Date().toISOString()
+            }).then(() => {
+                document.getElementById('status').innerText = `Inviato: ${lat}, ${lng}`;
+            });
+        }
+
+        // 3. Avvia il tracciamento in tempo reale
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(sendLocation, (error) => {
+                console.error("Errore GPS:", error);
+            }, {
+                enableHighAccuracy: true // Massima precisione
+            });
+        } else {
+            alert("Il tuo browser non supporta la geolocalizzazione.");
         }
     </script>
 </body>
